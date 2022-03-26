@@ -1,0 +1,7 @@
+#+TITLE: Arch Installer
+
+* By me and for me.
+But feel free to use it as you wish.
+** TODO Improve user-script communication
+** TODO Merge both scripts into one
+** TODO Add automatic downloading of my dotfiles
