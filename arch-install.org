@@ -1,0 +1,60 @@
+#+TITLE: Arch Install
+#+PROPERTY: header-args :tangle arch-install.sh
+
+* What is this?
+Simple script to auto-install Arch and all my configs
+
+* Installation
+** System clock
+#+begin_src bash
+timedatectl set-ntp true
+#+end_src
+
+#+RESULTS:
+** Disks
+*** User input
+#+begin_src bash
+fdisk -l
+echo disk
+read disk
+echo swap
+read swap
+swapend=$((($swap * 1024) + 513 ))
+#+end_src
+
+#+RESULTS:
+*** Partitioning
+#+begin_src bash
+parted -s -a optimal -- $disk \
+    mklabel gpt \
+    mkpart primary fat32 1MiB 513MiB
+bootprt=1
+mkfs.fat -F32 $disk$bootprt
+if [[ $swap -ne 0 ]]; then
+    parted -s -a optimal -- $disk mkpart primary linux-swap 513MiB $swapend
+    swapprt=2
+    rootprt=3
+    mkswap $disk$swapprt
+else
+    rootprt=2
+fi
+parted -s -a optimal -- $disk mkpart primary ext4 $swapend -2048s
+mkfs.ext4 $disk$rootprt
+e2label $disk$rootprt archrfs
+#+end_src
+*** Mounting
+#+begin_src bash
+mount $disk$rootprt /mnt
+mkdir /mnt/boot
+mount $disk$bootprt /mnt/boot
+if [[ -n $swapprt ]]; then
+    swapon $disk$swapprt
+fi
+#+end_src
+** Installing base system
+#+begin_src bash
+pacstrap /mnt base base-devel linux-zen linux-firmware vim networkmanager efibootmgr grub git
+genfstab -U /mnt >> /mnt/etc/fstab
+mv arch-chroot-install.sh /mnt/
+arch-chroot /mnt
+#+end_src
