@@ -1,9 +1,27 @@
+cyan='\033[0;36m'
+red='\033[0;31m'
+green='\033[0;32m'
+white='\033[0;37m'
+separator="\n${cyan}<<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>>${white}\n"
+
+pacman -S figlet
+clear
+echo -e "$cyan"
+figlet arch-installer
+echo -e "${white}by mrugacz\n\n\npress enter to continue"
+read
+
 timedatectl set-ntp true
 
+echo -e $separator
 fdisk -l
-echo disk
+echo -e $separator
+echo 'Select disk to use. (full path eq. /dev/sda)'
+echo -e $separator
 read disk
-echo swap
+echo -e $separator
+echo 'Select how much swap to use. (GiB eq. 8)'
+echo -e $separator
 read swap
 swapend=$((($swap * 1024) + 513 ))
 
@@ -31,7 +49,13 @@ if [[ -n $swapprt ]]; then
     swapon $disk$swapprt
 fi
 
+echo -e $separator
+echo 'Installing base system'
+echo -e $separator
 pacstrap /mnt base base-devel linux-zen linux-firmware vim networkmanager efibootmgr grub git
 genfstab -U /mnt >> /mnt/etc/fstab
 mv arch-chroot-install.sh /mnt/
+echo -e $separator
+echo -e "Execute ${green}arch-chroot-install.sh${white} to continue"
+echo -e $separator
 arch-chroot /mnt
