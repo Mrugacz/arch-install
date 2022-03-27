@@ -29,14 +29,17 @@ echo -e $separator
 echo -e "Downloading CPU microcode for ${green}$cpu${white} CPU"
 echo -e $separator
 if [[ $cpu == AuthenticAMD ]]; then
-    pacman -S amd-ucode
+    pacman -S amd-ucode --noconfirm
 elif [[ $cpu == GenuineIntel ]]; then
-    pacman -S intel-ucode
+    pacman -S intel-ucode --noconfirm
 else
     echo -e "${red}Unsupported CPU - no microcode will be downloaded${white}"
 fi
 grub-mkconfig -o /boot/grub/grub.cfg
 systemctl enable NetworkManager sshd
+
+su $user -c 'git clone https://aur.archlinux.org/yay-bin.git && cd yay-bin && makepkg'
+pacman -U yay-bin/yay-*.pkg.tar.zst --noconfirm
 echo -e $separator
 echo -e "${green}Installation complete.${white}\nYou can now reboot your system."
 echo -e $separator

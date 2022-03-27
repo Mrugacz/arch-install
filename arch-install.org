@@ -77,7 +77,7 @@ fi
 echo -e $separator
 echo 'Installing base system'
 echo -e $separator
-pacstrap /mnt base base-devel linux-zen linux-firmware vim networkmanager efibootmgr grub git
+pacstrap /mnt base base-devel linux-zen linux-firmware vim networkmanager efibootmgr grub git openssh
 genfstab -U /mnt >> /mnt/etc/fstab
 cd /mnt
 curl https://raw.githubusercontent.com/Mrugacz/arch-install/main/arch-chroot-install.sh > arch-chroot-install.sh
