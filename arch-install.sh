@@ -4,7 +4,7 @@ green='\033[0;32m'
 white='\033[0;37m'
 separator="\n${cyan}<<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>>${white}\n"
 
-pacman -S figlet
+pacman -Sy figlet --noconfirm
 clear
 echo -e "$cyan"
 figlet arch-installer
@@ -54,8 +54,6 @@ echo 'Installing base system'
 echo -e $separator
 pacstrap /mnt base base-devel linux-zen linux-firmware vim networkmanager efibootmgr grub git
 genfstab -U /mnt >> /mnt/etc/fstab
-mv arch-chroot-install.sh /mnt/
-echo -e $separator
-echo -e "Execute ${green}arch-chroot-install.sh${white} to continue"
-echo -e $separator
-arch-chroot /mnt
+chmod +x arch-chroot-install.sh
+mv arch-chroot-install.sh /mnt
+arch-chroot /mnt bash arch-chroot-install.sh
