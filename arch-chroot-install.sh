@@ -39,7 +39,7 @@ grub-mkconfig -o /boot/grub/grub.cfg
 systemctl enable NetworkManager sshd
 
 su $user -c 'cd ~ && git clone https://aur.archlinux.org/yay-bin.git && cd yay-bin && makepkg'
-pacman -U yay-bin/yay-*.pkg.tar.zst --noconfirm
+pacman -U /home/$user/yay-bin/yay-*.pkg.tar.zst --noconfirm
 rm -r /home/$user/yay-bin
 echo -e $separator
 echo -e "${green}Installation complete.${white}\nYou can now reboot your system."
